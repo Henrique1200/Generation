@@ -23,7 +23,7 @@ programa
 		escreva("\nMédia geral: ",mediaGeral)
 		para(x=0;x<3;x++)
 		{
-			escreva("\n Média alune ",x+1, "foi de: ", media[x])
+			escreva("\n Média alune ", x+1, " foi de: ", media[x])
 		}
 		
 	}
@@ -33,7 +33,7 @@ programa
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
  * 
- * @POSICAO-CURSOR = 12; 
+ * @POSICAO-CURSOR = 601; 
  * @PONTOS-DE-PARADA = ;
  * @SIMBOLOS-INSPECIONADOS = {media, 8, 7, 5}-{n1, 8, 16, 2};
  * @FILTRO-ARVORE-TIPOS-DE-DADO = inteiro, real, logico, cadeia, caracter, vazio;
