@@ -1,0 +1,2 @@
+module produto_eletronico {
+}
