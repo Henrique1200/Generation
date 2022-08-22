@@ -1,37 +1,198 @@
 package com.generation.conta;
 
-import com.generation.conta.modell.Conta;
+import java.io.IOException;
+import java.util.Scanner;
+
+import com.generation.conta.modell.Banco;
+import com.generation.conta.util.Cores;
+import com.generation.conta.modell.ContaCorrente;
+import com.generation.conta.modell.ContaInss;
+
 
 public class Menu {
 
 	public static void main(String[] args) {
 		
-		Conta c1 = new Conta(123456, "123", "CC", "João da Silva", 2000.50f );
-         c1.visualizar();
+		Scanner leia = new Scanner(System.in);
+			
+		Banco contas = new Banco();
 		
-         Conta c2 = new Conta(123457, "123", "CC", "Amanda", 50400.50f );
-		c2.visualizar();
+		ContaCorrente cc1 = new ContaCorrente(contas.gerarNumero(), "123", 1, "João da Silva", 1000f, 100.0f);
+		contas.inserir(cc1);
 		
-		System.out.println("\nSaldo da Conta c1: " + c1.getSaldo());
-	    c1.setSaldo(3500.0f);
-	    //System.out.println("\nSaldo atualizado da conta c1: "+ c1.getSaldo());
-	    c1.visualizar();
-	    
-	    c2.setTitular("Amanda Giacometti");
-	    //System.out.println("\nDados atualizado da conta C2: "+c2.getTitular());
-	    c2.visualizar();
-	    
-	    Conta c3 = new Conta();
-	    c3.setNumero(876543);
-	    c3.setTitular("Gabrieli Santos");
-	    c3.setSaldo(4000.5f);
-	    c3.visualizar();
-	 
-	    if (c2.sacar(100000.0f) == true)
-	    c2.visualizar();
-	   // else
-	    //	System.out.println("\nSaldo Insuficiente!");
-	    
+		ContaCorrente cc2 = new ContaCorrente(contas.gerarNumero(), "124", 1, "Maria da Silva", 2000f, 100.0f);
+		contas.inserir(cc2);
+		
+		ContaInss ci1 = new ContaInss(contas.gerarNumero(), "124", 2, "Maria da Silva", 2000f, 123456789);
+		contas.inserir(ci1);
+		
+		int opcao, numero, tipo, numeroDeposito, beneficio = 0;
+		String titular, agencia = "";
+		float saldo, limite, valor = 0.0f;
+		
+		while(true) {
+
+				System.out.println(Cores.TEXT_GREEN + "*********************************************************************" 
+													+ Cores.TEXT_RESET);
+				System.out.println(Cores.TEXT_WHITE_BOLD + Cores.ANSI_BLUE_BACKGROUND 
+													+ "                                                                     ");
+				System.out.println(Cores.TEXT_WHITE_BOLD + Cores.ANSI_BLUE_BACKGROUND
+													+ "                       BANCO GENERATION BRASIL                       ");
+				System.out.println(Cores.TEXT_WHITE_BOLD + Cores.ANSI_BLUE_BACKGROUND 
+													+ "                                                                     ");
+				System.out.println(Cores.TEXT_RESET + Cores.TEXT_GREEN
+													+ "*********************************************************************");
+				System.out.println(Cores.TEXT_GREEN + Cores.ANSI_BLUE_BACKGROUND
+														 + "                                                                     ");
+				System.out.println(Cores.TEXT_GREEN_BOLD + "            1 - Criar Conta                                          ");
+				System.out.println(Cores.TEXT_GREEN_BOLD + "            2 - Ver Saldo da Conta                                   ");
+				System.out.println(Cores.TEXT_GREEN_BOLD + "            3 - Dados da Conta                                       ");
+				System.out.println(Cores.TEXT_GREEN_BOLD + "            4 - Sacar                                                ");
+				System.out.println(Cores.TEXT_GREEN_BOLD + "            5 - Depositar em Conta Corrente                          ");
+				System.out.println(Cores.TEXT_GREEN_BOLD + "            6 - Transferir entre Contas Corrente                     ");
+				System.out.println(Cores.TEXT_GREEN_BOLD + "            7 - Sair                                                 ");
+				System.out.println(Cores.TEXT_GREEN_BOLD + "                                                                     " 
+													+ Cores.TEXT_RESET);
+				System.out.println(Cores.TEXT_GREEN + "*********************************************************************");
+				System.out.println(Cores.TEXT_YELLOW + " Entre com a opção desejada:                         "
+													+ Cores.TEXT_RESET);
+				opcao = leia.nextInt();
+				
+				if (opcao == 7) {
+					System.out.println(Cores.TEXT_WHITE_BOLD + "\nBanco Generation Brasil - O seu Futuro começa aqui!");
+					leia.close();
+					System.exit(0);
+				}
+				
+				switch (opcao) {
+				case 1:
+					System.out.println(Cores.TEXT_WHITE + "Criar Conta Corrente\n\n");
+					
+					System.out.println("Digite o Numero da Agência: ");
+					agencia = leia.next();
+					System.out.println("Digite o Nome do Titular: ");
+					leia.skip("\\R?");
+					titular = leia.nextLine();
+					
+					do {
+						System.out.println("Digite o Tipo da Conta (1-CC ou 2-CI): ");
+						tipo = leia.nextInt();
+					}while(tipo < 1 && tipo > 2);
+						
+					System.out.println("Digite o Saldo da Conta (R$): ");
+					saldo = leia.nextFloat();
+					
+					if (tipo == 1) {
+						System.out.println("Digite o Limite de Crédito (R$): ");
+						limite = leia.nextFloat();
+						
+						contas.inserir(new ContaCorrente(contas.gerarNumero(), agencia, tipo, titular, saldo, limite));
+						
+					}else {
+						System.out.println("Digite o Numero do Benefício: ");
+						beneficio = leia.nextInt();
+						
+						contas.inserir(new ContaInss(contas.gerarNumero(), agencia, tipo, titular, saldo, beneficio));
+						
+					}
+										
+					keyPress();
+					
+					break;
+				case 2:
+					System.out.println(Cores.TEXT_WHITE + "Visualizar Saldo\n\n");
+					
+					System.out.println("Digite o Numero da conta: ");
+					numero = leia.nextInt();
+							
+					contas.verSaldo(contas.procurar(numero));
+					
+					keyPress();
+					
+					break;
+				case 3:
+					
+					System.out.println(Cores.TEXT_WHITE + "Consultar dados da Conta\n\n");
+					
+					System.out.println("Digite o Numero da conta: ");
+					numero = leia.nextInt();
+					
+					contas.visualizar(contas.procurar(numero));
+					
+					keyPress();
+	
+					break;
+				case 4:
+					System.out.println(Cores.TEXT_WHITE + "Saque\n\n");
+					
+					System.out.println("Digite o Numero da conta: ");
+					numero = leia.nextInt();
+					System.out.println("Digite o Valor do Saque (R$): ");
+					valor = leia.nextFloat();
+					
+					contas.sacar(contas.procurar(numero), valor);
+					
+					keyPress();
+
+					break;
+				case 5:
+					System.out.println(Cores.TEXT_WHITE + "Depositar\n\n");
+					
+					System.out.println("Digite o Numero da conta: ");
+					numero = leia.nextInt();
+					System.out.println("Digite o Valor do Depósito (R$): ");
+					valor = leia.nextFloat();
+					
+					contas.depositar(contas.procurar(numero), valor);
+					
+					keyPress();
+					
+					break;
+				case 6:
+					
+					System.out.println(Cores.TEXT_WHITE + "Transferência entre Contas\n\n");
+					
+					System.out.println("Digite o Numero da Conta de Origem: ");
+					numero = leia.nextInt();
+					System.out.println("Digite o Numero da Conta de Destino: ");
+					numeroDeposito = leia.nextInt();
+					System.out.println("Digite o Valor da Transferência (R$): ");
+					valor = leia.nextFloat();
+					
+					contas.transferir(contas.procurar(numero), contas.procurar(numeroDeposito), valor);
+					
+					keyPress();
+					
+					break;
+				default:
+					
+					System.out.println(Cores.TEXT_RED_BOLD + "\nOpção Inválida!");
+					keyPress();
+					
+					break;
+			}
+		}		
+		
+	}
+	
+	public static void keyPress() {
+		
+		try {
+			
+			System.out.println(Cores.TEXT_RESET + "\n\nPressione Enter para Continuar...");
+			System.in.read();
+			
+		} catch (IOException e) {
+			
+			System.out.println("Você pressionou uma tecla diferente de enter!");
+			
+		}finally {
+			System.out.println(Cores.TEXT_RESET + "\n\nPressione Enter para Continuar...");
+		
+		}
 	}
 
-}
+	
+		}
+	
+
